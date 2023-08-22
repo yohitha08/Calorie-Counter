@@ -1,0 +1,86 @@
+<%- include("./partials/header") %>
+    
+    <div class="container" id="mainContainer" >
+        <div class="row">
+            <div class="col-xs-8 "  id="addmealBlock" >
+                <input type="hidden" id="userid" value="<%= daysList[0].user_id %>" >
+                <% for(var j=0; j < daymealsList.length; j++){ %>
+                    <div class="row Daymeals" id="<%= daymealsList[j]._id %>">
+                        <table class="table table-hover " >
+                            
+                            <tr>    
+                                <th><input type="text" value="<%= daymealsList[j].title %>" ></th>
+                                <th></th>
+                                <td>Calories <div ><%= daymealsList[j].totalcalories.cal %> kcal</div></td>
+                                <td>Protein <div><%= daymealsList[j].totalcalories.prot %> g</div></td>
+                                <td>Carbs <div><%= daymealsList[j].totalcalories.carb %> g</div></td>
+                                <td>Fat  <div><%= daymealsList[j].totalcalories.fat %> g</div></td>
+                                <th><button type="button" name="Additem" value="<%= daymealsList[j]._id %>" class="simple">add</button>
+                                    <form action="/deleteMenu" method="post">
+                                        <input type="hidden" name="dayname" value="<%=  dayName %>">
+                                    <button type="submit" name="Deleteitem" value="<%= daymealsList[j]._id %>" class="simple">delete</button>
+                                    </form>
+                                </th>
+                            </tr>
+                        
+                            
+                                <% for(var i=0; i < daymealsList[j].myFooditemsList.length; i++){ %>
+                                    
+                                    
+                                    
+                                    <tr>
+                                        <form action="/changeQuantity" method="post">
+                                            <input type="hidden" name="mealname" value="<%= daymealsList[j]._id %>" >
+                                            <input type="hidden" name="dayname" value="<%= dayName %>">
+                                            <input type="hidden" name="itemid" value="<%= daymealsList[j].myFooditemsList[i]._id %>" >
+                                            <td><input type="text" pattern="\d*" autocomplete="off" name="quantity" value="<%= daymealsList[j].myFooditemsList[i].quantity %>" onkeyup="this.form.submit()"></td>
+                                        </form>
+                                        <td><%=daymealsList[j].myFooditemsList[i].food.title %></td>
+                                        <td><%= daymealsList[j].myFooditemsList[i].food.cal %></td>
+                                        <td><%= daymealsList[j].myFooditemsList[i].food.prot %></td>
+                                        <td><%= daymealsList[j].myFooditemsList[i].food.carb%></td>
+                                        <td><%= daymealsList[j].myFooditemsList[i].food.fat %></td>
+                                        <form action="/removeitem" method="post">
+                                            <input type="hidden" name="riMealname" value="<%= daymealsList[j]._id %>" >
+                                            <input type="hidden" name="riDayname" value="<%= dayName %>">
+                                            <td><button type="submit" name="removeitem" value="<%= daymealsList[j].myFooditemsList[i]._id %>" class="simple">remove</button></td>
+                                        </form>
+                                        
+                                    </tr>
+                                    
+                                </form>
+                                <%}%>
+    
+                        </table>
+                    </div>
+                <% } %>
+                <button type="button" class="btn btn-info btn-lg" id="addmeal" >+ Add Meal</button>
+            </div>
+
+
+            <div class="col-xs-3" id="dailyTotals">
+                <div class="row" id="headerDailyTotals" > Daily totals </div>
+                <div class="row rowDailytotals" > 
+                    <div class="col-xs-6" style="text-align:left; font-weight:700;" >Calories </div>
+                    <div class="col-xs-6" style="text-align:right; font-weight:600;" > <%= totalcalories.cal.toFixed(1) %> kcal</div>
+                </div>
+                <div class="row rowDailytotals" > 
+                    <div class="col-xs-6 col1Dailytotals" >Carbs </div>
+                    <div class="col-xs-6 col2Dailytotals" > <%= totalcalories.carb %> g</div>
+                </div>
+                <div class="row rowDailytotals" > 
+                    <div class="col-xs-6 col1Dailytotals" >Proteins </div>
+                    <div class="col-xs-6 col2Dailytotals" > <%= totalcalories.prot %> g</div>
+                </div>
+                <div class="row rowDailytotals" > 
+                    <div class="col-xs-6 col1Dailytotals" >Fats</div>
+                    <div class="col-xs-6 col2Dailytotals" > <%= totalcalories.fat%> g</div>
+                </div>
+    
+            </div>
+    </div>
+    
+</div>
+
+<%- include("sidebar") %>
+<%- include("./partials/footer") %>

@@ -1,0 +1,227 @@
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+<script type="text/javascript"> 
+
+
+    var mealname;
+    document.getElementById("addmeal").addEventListener("click",openSearch);
+    
+    document.getElementById("addmeal").addEventListener("click",()=>{
+        console.log("came inside addmeal");
+        document.getElementById("mealitem").action="/addmeal"; 
+    })
+    
+    console.log(document.getElementById("mealitem")) ; 
+    function openSearch(){
+        document.getElementById("mainContainer").style.position="relative";
+        document.getElementById("mainContainer").style.opacity="50px;"
+        document.getElementById("searchBlock").style.display="block";
+        document.getElementById("searchBlock").style.position="absolute";
+        document.getElementById("dailyTotals").style.display="none";
+        console.log(document.getElementById("mealitem")) ;  
+        
+
+    }
+
+    if(document.getElementsByName("Additem").length){
+
+        document.getElementById("mealitem").action="/additem"; 
+        var alladditems= document.getElementsByName("Additem");
+        for(var i=0; i<alladditems.length;i++){
+            alladditems[i].addEventListener("click",openSearch);
+        }    
+        $("button[name='Additem']").click(function() {
+            var fired_button = $(this).val();
+            console.log(fired_button);
+            $("#mn").val(fired_button);
+            console.log($("#mn").val());
+        });
+
+    }
+    
+    var allfoods=$(".menuItem");
+    
+    $("#searchBar").on("keyup",(e)=>{
+        var count=0;
+        for(var i=0; i<allfoods.length; i++){
+            console.log(allfoods[i].innerText.toLowerCase());
+            if(allfoods[i].innerText.toLowerCase().search(e.target.value.toLowerCase()) !=-1){
+                s=document.getElementsByName(allfoods[i].value);
+                s[0].style.display='block';
+                count=count+1;
+            }
+            else{
+                s=document.getElementsByName(allfoods[i].value);
+                s[0].style.display='none';
+            }
+            if(count>50){
+                break;
+            }
+        }
+    })
+
+    $(".filterBtn").on("click",(e)=>{
+        
+        //console.log(e);
+        var allfoods=$(".menuItem");
+        var allcategories= ["all categories","Poultry", "Beef","Pork","fish", "Vegetables", "Dairy and eggs","Grains and Pasta","Fruits and Juices", "Fats & oils", "Sauces and Soups","Spices and herbs" ,"sweets and snacks", "beverages", "Baked Products","Legumes & Legume Products","myfoods"];
+
+        var filterBlock= document.getElementById("filterbtns");
+        filterBlock.style.display="none";
+
+        var val=Number(e.target.value);
+        console.log(val);
+        if(val==0){
+            for(var i=0; i<allfoods.length; i++){
+                s=document.getElementsByName(allfoods[i].value);
+                s[0].style.display='block';
+            }
+
+        }
+        else if(1<=val && val<=5){
+            var l=allcategories[val].toLowerCase();
+            for(var i=0; i<allfoods.length; i++){
+                s=document.getElementsByName(allfoods[i].value);
+                var h=s[0].classList.value.toLowerCase();
+                if(h.search(l)!=-1){
+                    s[0].style.display='block';
+                }
+                else{
+                    s[0].style.display='none';
+                }
+            }
+
+        }
+        else if (6 <= val && val <= 12){
+            console.log(val);
+            var v=allcategories[val].split(' ');
+            var l=v[0].toLowerCase();
+            var ll=v[2].toLowerCase()
+            console.log(val,l,ll);
+
+            for(var i=0; i<allfoods.length; i++){
+                s=document.getElementsByName(allfoods[i].value);
+                var h=s[0].classList.value.toLowerCase();
+                if(h.search(l)!=-1||h.search(ll)!=-1){
+                    s[0].style.display='block';
+                }
+                else{
+                    s[0].style.display='none';
+                }
+            }
+            
+        }
+        else if(val>12 && val<=15){
+            var v=allcategories[val].split(' ');
+            var l=v[0].toLowerCase();
+            console.log(l[0]);
+            for(var i=0; i<allfoods.length; i++){
+                s=document.getElementsByName(allfoods[i].value);
+                var h=s[0].classList.value.toLowerCase();
+                if(h.search(l)!=-1){
+                    s[0].style.display='block';
+                }
+                else{
+                    s[0].style.display='none';
+                }
+            }
+        }
+        else{
+            var l=$("#userid").val();
+        
+            for(var i=0; i<allfoods.length; i++){
+                s=document.getElementsByName(allfoods[i].value);
+                var h=s[0].classList.value.toLowerCase();
+                console.log(h);
+                if(h.search(l)!=-1){
+                    s[0].style.display='block';
+                }
+                else{
+                    s[0].style.display='none';
+                }
+            }
+
+        }
+        
+        console.log(allcategories.length);
+        
+    
+    })
+
+    $("#filterButton").on("click",()=>{
+
+        var filterBlock= document.getElementById("filterbtns");
+        console.log(filterBlock);
+        if(filterBlock.style.display=="block"){
+            filterBlock.style.display="none";
+        }
+        else{
+            filterBlock.style.display="block";
+        }
+    })
+
+    function closeSearch(){
+        document.getElementById("searchBlock").style.display="none";
+        document.getElementById("dailyTotals").style.display="block";
+    }
+
+    function addDay(){
+        document.getElementById("newDay").style.display="block";
+    }
+    
+    function exportPDF(){
+       
+      var daymeals=document.getElementsByClassName("Daymeals");
+      var win = window.open('', '', 'height=700,width=700');
+       //console.log(daymeals[0].length);
+       for(var i=0; i<daymeals.length;i++){
+        console.log(daymeals[i].length);
+        var mealid=daymeals[i].id;
+        console.log(document.getElementById(mealid));
+        var sTable = document.getElementById(mealid).innerHTML;
+        console.log(sTable);
+        var style = "<style>";
+        style = style + "table {width: 100%;font: 17px Calibri;}";
+        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+        style = style + "padding: 2px 3px;text-align: center;}";
+        style = style + "</style>";
+
+        // CREATE A WINDOW OBJECT.
+
+        win.document.write('<html><head>');
+        win.document.write('<title>Daymenu</title>');   // <title> FOR PDF HEADER.
+        win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
+        win.document.write('</head>');
+        win.document.write('<body>');
+        win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+        win.document.write('</body></html>');
+
+ 
+       }
+       
+       //doc.save("sample.pdf"); 
+       win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+
+       win.print();    // PRINT THE CONTENTS.
+       pdfMake.createPdf(docDefinition).download("Table.pdf");
+
+
+       
+    }
+
+    function OpenCreatefood(){
+        $("#newFooddata").css("display","block");
+
+    }
+
+    $("#addmyData").on("click",()=>{
+        $("#newFooddata").css("display","none");
+    })
+       
+        
+    
+
+</script>
+</html>
